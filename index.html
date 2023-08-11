@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS Canvas Assignment</title>
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <style>
+        canvas {
+            border: 1px solid black;
+            
+        }
+        .tools {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .tools > * {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tools">
+        <button class="btn btn-primary" id="blue">Blue</button>
+        <button class="btn btn-primary" id="black">Black</button>
+        <button class="btn btn-primary" id="red">Red</button>
+        <button class="btn btn-primary" id="yellow">Yellow</button>
+        <button class="btn btn-primary" id="eraser"><i class="fas fa-eraser"></i></button>
+        <div class="form-group">
+            <label for="brushSize" class="form-label">Brush Size</label>
+            <input type="range" class="form-input" id="brushSize" min="2" max="15">
+        </div>
+        <button class="btn btn-primary" id="clear"><i class="far fa-file"></i></button>
+    </div>
+    <canvas id="canvas" width="1500" height="500"></canvas>
+
+    <script>
+        const canvas = document.querySelector('#canvas');
+        const ctx = canvas.getContext('2d');
+        
+
+        let painting = false;
+        let brushColor = 'black';
+        let brushSize = 2;
+
+        function startPosition(e) {
+            painting = true;
+            draw(e);
+        }
+
+        function finishedPosition() {
+            painting = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!painting) return;
+            ctx.lineWidth = brushSize;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = brushColor;
+
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX, e.clientY);
+        }
+
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', finishedPosition);
+        canvas.addEventListener('mousemove', draw);
+
+        document.querySelector('#blue').addEventListener('click', () => {
+            brushColor = 'blue';
+        });
+        
+        document.querySelector('#black').addEventListener('click', () => {
+            brushColor = 'black';
+        });
+        
+        document.querySelector('#red').addEventListener('click', () => {
+            brushColor = 'red';
+        });
+        
+        document.querySelector('#yellow').addEventListener('click', () => {
+            brushColor = 'yellow';
+        });
+
+        document.querySelector('#eraser').addEventListener('click', () => {
+            brushColor = 'white';
+        });
+
+        document.querySelector('#brushSize').addEventListener('input', (e) => {
+            brushSize = e.target.value;
+        });
+
+        document.querySelector('#clear').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+    </script>
+</body>
+</html>
